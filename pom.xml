@@ -115,14 +115,17 @@
                             <goal>add-source</goal>
                             <goal>compile</goal>
                         </goals>
-                    </execution>
-                    <execution>
+                      </execution>
+                      <!-- These don't work on CUSP Cluster for some reason, with the error:
+                       Bits-per-symbol of 2 is not equivalent to an alphabet of 3 symbols     
+                      -->
+                    <!--                    <execution>
                         <id>scala-test-compile</id>
                         <phase>process-test-resources</phase>
                         <goals>
                             <goal>testCompile</goal>
                         </goals>
-                    </execution>
+                    </execution>-->
                 </executions>
                 <configuration>
                     <jvmArgs>
