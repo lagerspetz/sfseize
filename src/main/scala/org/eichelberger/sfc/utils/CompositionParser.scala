@@ -1,7 +1,6 @@
 package org.eichelberger.sfc.utils
 
-import com.typesafe.scalalogging.Logging
-import org.eichelberger.sfc.SpaceFillingCurve.{Composable, OrdinalVector, OrdinalNumber, SpaceFillingCurve}
+import org.eichelberger.sfc.SpaceFillingCurve.{ Composable, OrdinalVector, OrdinalNumber, SpaceFillingCurve }
 import org.eichelberger.sfc._
 import scala.util.parsing.combinator.RegexParsers
 
@@ -37,7 +36,7 @@ object CompositionParser extends RegexParsers {
       val precisions = OrdinalVector(children.flatMap {
         case PrecisionOrCurve(Some(p), None) => Seq(p.toLong)
         case PrecisionOrCurve(None, Some(c)) => c.precisions.toSeq
-      }:_*)
+      }: _*)
       val curve = name match {
         case s: String if s.matches(R_CURVE_NAME.toString()) => new RowMajorCurve(precisions)
         case s: String if s.matches(Z_CURVE_NAME.toString()) => new ZCurve(precisions)
@@ -48,7 +47,7 @@ object CompositionParser extends RegexParsers {
         case PrecisionOrCurve(None, Some(c)) => c
       }
       new ComposedCurve(curve, childParams)
-    }
+  }
 
   def buildWholeNumberCurve(s: String): ComposedCurve = parse(curveParser, s).get
 }

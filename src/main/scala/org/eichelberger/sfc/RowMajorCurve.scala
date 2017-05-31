@@ -1,6 +1,6 @@
 package org.eichelberger.sfc
 
-import com.typesafe.scalalogging.slf4j.LazyLogging
+import com.typesafe.scalalogging.LazyLogging
 import org.eichelberger.sfc.utils.Lexicographics
 import Lexicographics.Lexicographic
 import org.eichelberger.sfc.SpaceFillingCurve._

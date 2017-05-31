@@ -1,7 +1,7 @@
 package org.eichelberger.sfc
 
-import com.typesafe.scalalogging.slf4j.LazyLogging
-import org.eichelberger.sfc.planners.{SquareQuadTreePlanner, ZCurvePlanner, OffSquareQuadTreePlanner}
+import com.typesafe.scalalogging.LazyLogging
+import org.eichelberger.sfc.planners.{ SquareQuadTreePlanner, ZCurvePlanner, OffSquareQuadTreePlanner }
 import org.eichelberger.sfc.utils.Lexicographics
 import Lexicographics.Lexicographic
 import org.eichelberger.sfc.SpaceFillingCurve._
@@ -70,13 +70,13 @@ abstract class BaseCompactHilbertCurve(val precisions: OrdinalVector) extends Sp
 
   // the mask is named "mu" in the papers
   def extractMask(i: Int, d: Long): Mask = {
-    var accMask = Mask(0,0)
+    var accMask = Mask(0, 0)
     var j = n - 1
     while (j >= 0) {
       if (precisions((j + d) % n) > i)
         accMask = Mask(accMask.value << 1L | 1L, accMask.size + 1)
       else
-        accMask = Mask(accMask.value << 1L     , accMask.size)
+        accMask = Mask(accMask.value << 1L, accMask.size)
       j = j - 1
     }
     accMask
@@ -115,7 +115,7 @@ abstract class BaseCompactHilbertCurve(val precisions: OrdinalVector) extends Sp
         case 0 => r
         case 1 => (r << 1L) | bitAt(w, j)
       }
-      
+
       j = j - 1
     }
     r
@@ -218,7 +218,7 @@ abstract class BaseCompactHilbertCurve(val precisions: OrdinalVector) extends Sp
       h = (h << mu.size) | r
       e = e ^ barrelShiftLeft(entry(w), d)
       d = (d + nextDim(w) + 1) % n
-      
+
       i = i - 1
     }
 
@@ -229,7 +229,7 @@ abstract class BaseCompactHilbertCurve(val precisions: OrdinalVector) extends Sp
     var e = 0L
     var d = 0L
     var k = 0L
-    var p = OrdinalVector(Seq.fill(n)(0L):_*)
+    var p = OrdinalVector(Seq.fill(n)(0L): _*)
     var mu = Mask(0, 0)
     var r = 0L
     var w = 0L
@@ -262,7 +262,7 @@ abstract class BaseCompactHilbertCurve(val precisions: OrdinalVector) extends Sp
       }
       e = e ^ barrelShiftLeft(entry(w), d)
       d = (d + nextDim(w) + 1) % n
-      
+
       i = i - 1
     }
 
@@ -302,14 +302,12 @@ case class CompactHilbertCurve(override val precisions: OrdinalVector) extends B
         // upper half of the remaining range
         dimRanges(bitPos) = OrdinalPair(
           1L + ((oldRange.max + oldRange.min) >> 1L),
-          oldRange.max
-        )
+          oldRange.max)
       } else {
         // lower half of the remaining range
         dimRanges(bitPos) = OrdinalPair(
           oldRange.min,
-          (oldRange.max + oldRange.min) >> 1L
-        )
+          (oldRange.max + oldRange.min) >> 1L)
       }
 
       // decrement this counter
@@ -326,7 +324,7 @@ case class CompactHilbertCurve(override val precisions: OrdinalVector) extends B
 
     // short-cut for single-point lookup
     if (precision == M) {
-      val idx = getOrComputeIndex(OrdinalVector(dimRanges.map(_.min):_*))
+      val idx = getOrComputeIndex(OrdinalVector(dimRanges.map(_.min): _*))
       return Seq(OrdinalPair(idx, idx))
     }
 
@@ -341,12 +339,12 @@ case class CompactHilbertCurve(override val precisions: OrdinalVector) extends B
     }
 
     // identify the sub-cubes
-    val LL = OrdinalVector(dimRanges.map { case OrdinalPair(a, b) => a }:_*)
-    val cubeCounts = combinationsIterator(OrdinalVector(stepsPerDim:_*))
+    val LL = OrdinalVector(dimRanges.map { case OrdinalPair(a, b) => a }: _*)
+    val cubeCounts = combinationsIterator(OrdinalVector(stepsPerDim: _*))
     val cubeLLs = cubeCounts.map(steps => {
       OrdinalVector(LL.zipWith(steps).map {
         case (start, numSteps) => start + smallestIncrement * numSteps
-      }:_*)
+      }: _*)
     })
 
     // short-cut for points
@@ -355,13 +353,13 @@ case class CompactHilbertCurve(override val precisions: OrdinalVector) extends B
       idxSingletons.toSeq
     } else {
       // the minimum increment is larger than 1
-      val toggles = OrdinalVector(List.fill(n)(2L):_*)
+      val toggles = OrdinalVector(List.fill(n)(2L): _*)
       val cubeRanges = cubeLLs.map(cubeLL => {
         val points = combinationsIterator(toggles).map(toggle => {
           val point = cubeLL.zipWith(toggle).map {
             case (x, factor) => x + (smallestIncrement - 1) * factor
           }
-          OrdinalVector(point:_*)
+          OrdinalVector(point: _*)
         }).toList
         val idxs = points.map(point => getOrComputeIndex(point))
 

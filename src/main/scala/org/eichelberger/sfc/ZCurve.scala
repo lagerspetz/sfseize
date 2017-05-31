@@ -1,7 +1,7 @@
 package org.eichelberger.sfc
 
-import com.typesafe.scalalogging.slf4j.LazyLogging
-import org.eichelberger.sfc.planners.{SquareQuadTreePlanner, ZCurvePlanner}
+import com.typesafe.scalalogging.LazyLogging
+import org.eichelberger.sfc.planners.{ SquareQuadTreePlanner, ZCurvePlanner }
 import org.eichelberger.sfc.utils.Lexicographics
 import Lexicographics._
 import org.eichelberger.sfc.SpaceFillingCurve._
@@ -16,7 +16,7 @@ case class ZCurve(precisions: OrdinalVector) extends SpaceFillingCurve with Squa
   val name = "Z"
 
   // pre-compute bit-to-dimension assignments
-  val bitAssignments: Seq[(Int, Int)] = (0 until M).foldLeft((precisions.toSeq, 0, Seq[(Int,Int)]()))((acc, bitPos) => acc match {
+  val bitAssignments: Seq[(Int, Int)] = (0 until M).foldLeft((precisions.toSeq, 0, Seq[(Int, Int)]()))((acc, bitPos) => acc match {
     case (precisionsLeft, dimension, assignmentsSoFar) =>
       var nextDim = dimension
       var i = 0
